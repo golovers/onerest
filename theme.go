@@ -3,19 +3,20 @@ package onerest
 import "errors"
 
 type Theme struct {
-	name  string
+	names  []string
 	scope *Scope
 	OneScopeBaseService
 }
 
 func (theme *Theme) Self(selects ...string) (Asset, error) {
-	themes, err := theme.find(NewQueryBuilder("Theme").Select(selects...).And("Scope.Name", theme.scopeName).And("Name", theme.name))
+	themes, err := theme.find(NewQueryBuilder("Theme").Select(selects...).And("Scope.Name", theme.scopeName).And("Name", theme.names...))
 	if err != nil {
 		return Asset{}, err
 	}
 	if len(themes) > 0 {
 		return themes[0], nil
 	}
+	//TODO to be corrected in case multiple names are given
 	return Asset{}, errors.New("Theme not found")
 }
 

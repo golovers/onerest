@@ -150,7 +150,7 @@ type IOneScopeService interface {
 	Epics(selects ...string) ([]Asset, error)
 	Timeboxes(selects ...string) ([]Asset, error)
 	Timebox(name string, selects ...string) (Asset, error)
-	Theme(name string) IOneScopeBaseService
-	Epic(name string) IOneScopeBaseService
-	Group(name string, typ string) IOneScopeBaseService
+	Theme(names ...string) IOneScopeBaseService
+	Epic(names ...string) IOneScopeBaseService
+	Group(typ string, names ...string) IOneScopeBaseService
 }

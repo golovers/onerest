@@ -11,21 +11,21 @@ type Scope struct {
 	OneScopeBaseService
 }
 
-func (s *Scope) Theme(name string) IOneScopeBaseService {
-	base := s.OneScopeBaseService.Clone(NewQuery().And("ParentAndUp.Name", name))
-	return &Theme{name: name, scope: s, OneScopeBaseService: *base}
+func (s *Scope) Theme(names ...string) IOneScopeBaseService {
+	base := s.OneScopeBaseService.Clone(NewQuery().And("ParentAndUp.Name", names...))
+	return &Theme{names: names, scope: s, OneScopeBaseService: *base}
 }
 
-func (s *Scope) Epic(name string) IOneScopeBaseService {
-	base := s.OneScopeBaseService.Clone(NewQuery().And("SuperAndUp.Name", name))
-	return &Epic{name: name, scope: s, OneScopeBaseService: *base}
+func (s *Scope) Epic(names ...string) IOneScopeBaseService {
+	base := s.OneScopeBaseService.Clone(NewQuery().And("SuperAndUp.Name", names...))
+	return &Epic{names: names, scope: s, OneScopeBaseService: *base}
 }
 
-func (s *Scope) Group(name string, typ string) IOneScopeBaseService {
+func (s *Scope) Group(typ string, names ...string) IOneScopeBaseService {
 	if strings.ToLower(typ) == "epic" {
-		return s.Epic(name)
+		return s.Epic(names...)
 	} else {
-		return s.Theme(name)
+		return s.Theme(names...)
 	}
 }
 

@@ -3,19 +3,20 @@ package onerest
 import "errors"
 
 type Epic struct {
-	name  string
+	names  []string
 	scope *Scope
 	OneScopeBaseService
 }
 
 func (epic *Epic) Self(selects ...string) (Asset, error) {
-	epics, err := epic.find(NewQueryBuilder("Epic").Select(selects...).And("Scope.Name", epic.scopeName).And("Name", epic.name))
+	epics, err := epic.find(NewQueryBuilder("Epic").Select(selects...).And("Scope.Name", epic.scopeName).And("Name", epic.names...))
 	if err != nil {
 		return Asset{}, err
 	}
 	if len(epics) > 0 {
 		return epics[0], nil
 	}
+	//TODO to be corrected in case multiple names are given
 	return Asset{}, errors.New("Epic not found")
 }
 

@@ -40,32 +40,42 @@ func NewQuery() *Query {
 	return &Query{asset: "", selects: bytes.NewBufferString(""), wheres: bytes.NewBufferString("")}
 }
 
-func (q *Query) And(attribute string, value string) *Query {
-	return q.AndWithOperator(attribute, "=", value)
+func (q *Query) And(attribute string, value ...string) *Query {
+	return q.AndWithOperator(attribute, "=", value...)
 }
 
-func (q *Query) AndWithOperator(attribute string, operator string, value string) *Query {
+func (q *Query) AndWithOperator(attribute string, operator string, value ...string) *Query {
 	if len(q.wheres.String()) > 0 {
 		q.wheres.WriteString(AND)
 	}
 	q.wheres.WriteString(attribute)
 	q.wheres.WriteString(operator)
-	q.wheres.WriteString(url.QueryEscape("'" + value + "'"))
+	for i, v := range value {
+		q.wheres.WriteString(url.QueryEscape("'" + v + "'"))
+		if i < len(value) -1 {
+			q.wheres.WriteString(",")
+		}
+	}
 
 	return q
 }
 
-func (q *Query) Or(attribute string, value string) *Query {
-	return q.OrWithOperator(attribute, "=", value)
+func (q *Query) Or(attribute string, values ...string) *Query {
+	return q.OrWithOperator(attribute, "=", values...)
 }
 
-func (q *Query) OrWithOperator(attribute string, operator string, value string) *Query {
+func (q *Query) OrWithOperator(attribute string, operator string, values ...string) *Query {
 	if len(q.wheres.String()) > 0 {
 		q.wheres.WriteString(OR)
 	}
 	q.wheres.WriteString(attribute)
 	q.wheres.WriteString(operator)
-	q.wheres.WriteString(url.QueryEscape("'" + value + "'"))
+	for i, v := range values {
+		q.wheres.WriteString(url.QueryEscape("'" + v + "'"))
+		if i < len(values) -1 {
+			q.wheres.WriteString(",")
+		}
+	}
 
 	return q
 }
