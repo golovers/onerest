@@ -8,30 +8,36 @@ type Epic struct {
 	OneScopeBaseService
 }
 
-func (epic *Epic) Self(selects ...string) (Asset, error) {
+func (epic *Epic) Self(selects ...string) ([]Asset, error) {
 	epics, err := epic.find(NewQueryBuilder("Epic").Select(selects...).And("Scope.Name", epic.scopeName).And("Name", epic.names...))
 	if err != nil {
-		return Asset{}, err
+		return []Asset{}, err
 	}
 	if len(epics) > 0 {
-		return epics[0], nil
+		return epics, nil
 	}
-	//TODO to be corrected in case multiple names are given
-	return Asset{}, errors.New("Epic not found")
+	return []Asset{}, errors.New("Epic not found")
 }
 
 func (epic *Epic) Trend(params map[string]string) (Trend, error) {
-	self, err := epic.Self()
+	result := Trend{}
+	selfs, err := epic.Self()
 	if err != nil {
 		return Trend{}, err
 	}
+	for _, e := range selfs {
+		s, err := epic.scope.Self()
+		if err != nil {
+			return Trend{}, err
+		}
+		params["project"] = s[0].Id
+		params["epic"] = e.Id
+		r,err := epic.OneScopeBaseService.Trend(params)
+		if err != nil {
+			return result, err
 
-	s, err := epic.scope.Self()
-	if err != nil {
-		return Trend{}, err
+		}
+		result.Merge(r)
 	}
-	params["project"] = s.Id
-	params["epic"] = self.Id
-
-	return epic.OneScopeBaseService.Trend(params)
+	return result, nil
 }

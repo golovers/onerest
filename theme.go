@@ -8,29 +8,35 @@ type Theme struct {
 	OneScopeBaseService
 }
 
-func (theme *Theme) Self(selects ...string) (Asset, error) {
+func (theme *Theme) Self(selects ...string) ([]Asset, error) {
 	themes, err := theme.find(NewQueryBuilder("Theme").Select(selects...).And("Scope.Name", theme.scopeName).And("Name", theme.names...))
 	if err != nil {
-		return Asset{}, err
+		return []Asset{}, err
 	}
 	if len(themes) > 0 {
-		return themes[0], nil
+		return themes, nil
 	}
-	//TODO to be corrected in case multiple names are given
-	return Asset{}, errors.New("Theme not found")
+	return []Asset{}, errors.New("Theme not found")
 }
 
 func (theme *Theme) Trend(params map[string]string) (Trend, error) {
-	self, err := theme.Self()
+	result := Trend{}
+	selfs, err := theme.Self()
 	if err != nil {
 		return Trend{}, err
 	}
-	project, err := theme.scope.Self("ID")
-	if err != nil {
-		return Trend{}, err
+	for _, t := range selfs {
+		project, err := theme.scope.Self("ID")
+		if err != nil {
+			return Trend{}, err
+		}
+		params["project"] = project[0].Id
+		params["theme"] = t.Id
+		r, err := theme.OneScopeBaseService.Trend(params)
+		if err != nil {
+			return result, err
+		}
+		result.Merge(r)
 	}
-	params["project"] = project.Id
-	params["theme"] = self.Id
-
-	return theme.OneScopeBaseService.Trend(params)
+	return result, nil
 }

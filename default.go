@@ -104,7 +104,7 @@ func (one *OneService) Scope(name string) IOneScopeService {
 ///////////////////////////////////////////////////////////////////////////////////
 type IOneScopeBaseService interface {
 	IOneBaseService
-	Self(selects ...string) (Asset, error)
+	Self(selects ...string) ([]Asset, error)
 	CreatedInTimeRange(typ string, startInUTC string, endInUTC string, selects ...string) ([]Asset, error)
 	CreatedInTimebox(typ string, timebox Asset, selects ...string) ([]Asset, error)
 	ScopeName() string
@@ -115,8 +115,8 @@ type OneScopeBaseService struct {
 	OneBaseService
 }
 
-func (one *OneScopeBaseService) Self(selects ...string) (Asset, error) {
-	return Asset{}, nil
+func (one *OneScopeBaseService) Self(selects ...string) ([]Asset, error) {
+	return []Asset{}, nil
 }
 
 func (one *OneScopeBaseService) ScopeName() string {

@@ -29,16 +29,16 @@ func (s *Scope) Group(typ string, names ...string) IOneScopeBaseService {
 	}
 }
 
-func (s *Scope) Self(selects ...string) (Asset, error) {
+func (s *Scope) Self(selects ...string) ([]Asset, error) {
 	scopes, err := s.find(NewQueryBuilder("Scope").Select(selects...).
 		And("Name", s.scopeName))
 	if err != nil {
-		return  Asset{}, err
+		return  []Asset{}, err
 	}
 	if len(scopes) > 0 {
-		return scopes[0], nil
+		return scopes, nil
 	}
-	return Asset{}, errors.New("Scope not found")
+	return []Asset{}, errors.New("Scope not found")
 }
 
 func (s *Scope) Themes(selects ...string) ([]Asset, error) {
@@ -58,7 +58,7 @@ func (s *Scope) Timeboxes(selects ...string) ([]Asset, error) {
 		return []Asset{}, err
 	}
 	rs, err := s.find(NewQueryBuilder("Timebox").Select(sel...).
-		And("Schedule.Name", scp.GetAsStringValue("Schedule.Name")))
+		And("Schedule.Name", scp[0].GetAsStringValue("Schedule.Name")))
 	if err != nil {
 		return []Asset{}, err
 	}
@@ -106,6 +106,6 @@ func (s *Scope) Trend(params map[string]string) (Trend, error) {
 	if err != nil {
 		return Trend{}, err
 	}
-	params["project"] = a.Id
+	params["project"] = a[0].Id
 	return s.OneScopeBaseService.Trend(params)
 }
