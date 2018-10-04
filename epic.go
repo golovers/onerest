@@ -3,7 +3,7 @@ package onerest
 import "errors"
 
 type Epic struct {
-	names  []string
+	names []string
 	scope *Scope
 	OneScopeBaseService
 }
@@ -16,7 +16,7 @@ func (epic *Epic) Self(selects ...string) ([]Asset, error) {
 	if len(epics) > 0 {
 		return epics, nil
 	}
-	return []Asset{}, errors.New("Epic not found")
+	return []Asset{}, errors.New("epic not found")
 }
 
 func (epic *Epic) Trend(params map[string]string) (Trend, error) {
@@ -32,7 +32,7 @@ func (epic *Epic) Trend(params map[string]string) (Trend, error) {
 		}
 		params["project"] = s[0].Id
 		params["epic"] = e.Id
-		r,err := epic.OneScopeBaseService.Trend(params)
+		r, err := epic.OneScopeBaseService.Trend(params)
 		if err != nil {
 			return result, err
 

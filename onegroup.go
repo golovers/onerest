@@ -3,12 +3,12 @@ package onerest
 import "strings"
 
 type OneGroup struct {
-	Assets [] *Asset
+	Assets []*Asset
 }
 
 func (onegroup *OneGroup) AddAsset(asset Asset) {
 	if onegroup.Assets == nil {
-		onegroup.Assets = make([] *Asset, 0, 0)
+		onegroup.Assets = make([]*Asset, 0, 0)
 	}
 	onegroup.Assets = append(onegroup.Assets, &asset)
 }
@@ -45,7 +45,7 @@ func (onegroup *OneGroup) Aggregations(aggregationAttribute string, keyAttribute
 func (onegroup *OneGroup) AggregationsWithKeyTransformer(aggregationAttribute string, keyTransformer KeyTransformer) map[string]float64 {
 	m := OneMap{}
 	for _, asset := range onegroup.Assets {
-		m.PutWithKeyTransformer (keyTransformer, *asset)
+		m.PutWithKeyTransformer(keyTransformer, *asset)
 	}
 	result := make(map[string]float64)
 
@@ -69,23 +69,23 @@ func AggerationByType(attribute string, assets []Asset) float64 {
 	}
 }
 
-func SumByAttributeValue(attributename string, assets [] Asset) float64 {
+func SumByAttributeValue(attributename string, assets []Asset) float64 {
 	sum := float64(0)
 	for _, asset := range assets {
 		value := asset.GetAsReflectValue(attributename)
-		if (value.IsValid()) {
+		if value.IsValid() {
 			sum += float64(value.Float())
 		}
 	}
 	return sum
 }
 
-func RemoveUnexpectedCharactersInKeys(data map[string] float64) {
+func RemoveUnexpectedCharactersInKeys(data map[string]float64) {
 	unexpectedKeys := []string{">", "<"}
-	for k, _ := range data {
+	for k := range data {
 		newk := k
 		for _, ch := range unexpectedKeys {
-		newk = strings.Replace(newk, ch, "", 100)
+			newk = strings.Replace(newk, ch, "", 100)
 		}
 
 		if newk != k {

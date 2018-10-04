@@ -52,7 +52,7 @@ func (q *Query) AndWithOperator(attribute string, operator string, value ...stri
 	q.wheres.WriteString(operator)
 	for i, v := range value {
 		q.wheres.WriteString(url.QueryEscape("'" + v + "'"))
-		if i < len(value) -1 {
+		if i < len(value)-1 {
 			q.wheres.WriteString(",")
 		}
 	}
@@ -72,7 +72,7 @@ func (q *Query) OrWithOperator(attribute string, operator string, values ...stri
 	q.wheres.WriteString(operator)
 	for i, v := range values {
 		q.wheres.WriteString(url.QueryEscape("'" + v + "'"))
-		if i < len(values) -1 {
+		if i < len(values)-1 {
 			q.wheres.WriteString(",")
 		}
 	}
@@ -141,7 +141,7 @@ func (q *Query) Build() string {
 	}
 	wheres := q.wheres.String()
 	if len(wheres) > 0 {
-		if (len(sel) > 0) {
+		if len(sel) > 0 {
 			result.WriteString("&")
 		}
 		result.WriteString("where=" + wheres)
