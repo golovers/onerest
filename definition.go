@@ -1,9 +1,9 @@
 package onerest
 
 import (
-	"strings"
-	"reflect"
 	"fmt"
+	"reflect"
+	"strings"
 )
 
 // Reports objects
@@ -19,7 +19,7 @@ type Node struct {
 }
 
 type Trend struct {
-	Result [] *Node
+	Result []*Node
 }
 
 // Assets objects
@@ -42,7 +42,7 @@ type OneResponse struct {
 	Total     int64
 	PageSize  int64
 	PageStart int64
-	Assets    [] Asset
+	Assets    []Asset
 }
 
 func (asset *Asset) GetValue(attributename string) interface{} {

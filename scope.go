@@ -1,10 +1,10 @@
 package onerest
 
 import (
+	"errors"
 	"sort"
 	"strings"
 	"time"
-	"errors"
 )
 
 type Scope struct {
@@ -33,12 +33,12 @@ func (s *Scope) Self(selects ...string) ([]Asset, error) {
 	scopes, err := s.find(NewQueryBuilder("Scope").Select(selects...).
 		And("Name", s.scopeName))
 	if err != nil {
-		return  []Asset{}, err
+		return []Asset{}, err
 	}
 	if len(scopes) > 0 {
 		return scopes, nil
 	}
-	return []Asset{}, errors.New("Scope not found")
+	return []Asset{}, errors.New("scope not found")
 }
 
 func (s *Scope) Themes(selects ...string) ([]Asset, error) {
@@ -98,7 +98,7 @@ func (s *Scope) Timebox(name string, selects ...string) (Asset, error) {
 			}
 		}
 	}
-	return Asset{},errors.New("Timebox not found")
+	return Asset{}, errors.New("timebox not found")
 }
 
 func (s *Scope) Trend(params map[string]string) (Trend, error) {

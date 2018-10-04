@@ -12,7 +12,7 @@ type OneAuthBuilder struct {
 }
 
 func (auth *OneAuthBuilder) WithUserPassword(user, pass string) IOneService {
-	return &OneService{OneBaseService{BaseConstrains: NewQuery(), OneRest: OneRest{Host: auth.Host, Username: user, Password: pass}, }}
+	return &OneService{OneBaseService{BaseConstrains: NewQuery(), OneRest: OneRest{Host: auth.Host, Username: user, Password: pass}}}
 }
 
 func (auth *OneAuthBuilder) WithAccessToken(token string) IOneService {
@@ -62,7 +62,7 @@ func (one *OneBaseService) BaseConstraints() *Query {
 
 func (one *OneBaseService) Aggregations(typ string, aggregationAttribute string, groupAttributes ...string) (map[string]float64, error) {
 	g := OneGroup{}
-	sel := []string{}
+	var sel []string
 	sel = append(sel, groupAttributes...)
 	if aggregationAttribute != "count" {
 		sel = append(sel, aggregationAttribute)
@@ -77,8 +77,8 @@ func (one *OneBaseService) Aggregations(typ string, aggregationAttribute string,
 }
 
 func (one *OneBaseService) Trend(params map[string]string) (Trend, error) {
-	t, error := one.trend(params)
-	return t, error
+	t, errorOne := one.trend(params)
+	return t, errorOne
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +138,7 @@ func (one *OneScopeBaseService) Clone(constraints *Query) *OneScopeBaseService {
 	constr := constraints.AndWithQuery(one.BaseConstrains)
 
 	base := OneScopeBaseService{scopeName: one.scopeName,
-		OneBaseService:                OneBaseService{constr, one.OneRest}}
+		OneBaseService: OneBaseService{constr, one.OneRest}}
 
 	return &base
 }

@@ -3,7 +3,7 @@ package onerest
 import "errors"
 
 type Theme struct {
-	names  []string
+	names []string
 	scope *Scope
 	OneScopeBaseService
 }
@@ -16,7 +16,7 @@ func (theme *Theme) Self(selects ...string) ([]Asset, error) {
 	if len(themes) > 0 {
 		return themes, nil
 	}
-	return []Asset{}, errors.New("Theme not found")
+	return []Asset{}, errors.New("theme not found")
 }
 
 func (theme *Theme) Trend(params map[string]string) (Trend, error) {

@@ -1,14 +1,14 @@
 package onerest
 
 import (
-	"strings"
 	"bytes"
-	"log"
-	"encoding/json"
-	"reflect"
-	"net/http"
 	"encoding/base64"
+	"encoding/json"
 	"io/ioutil"
+	"log"
+	"net/http"
+	"reflect"
+	"strings"
 )
 
 const DATA_END_POINT = "/rest-1.v1/Data/"
@@ -22,7 +22,7 @@ type OneRest struct {
 	EnableLog   bool
 }
 
-func (one *OneRest) getRestRequest(url string) (*http.Request) {
+func (one *OneRest) getRestRequest(url string) *http.Request {
 	urlstr := one.Host + url
 	one.EnableLog = true
 	if one.EnableLog {
@@ -33,7 +33,7 @@ func (one *OneRest) getRestRequest(url string) (*http.Request) {
 	header := http.Header{}
 	header.Add("Accept", "application/json")
 	if one.Username != "" && one.Password != "" {
-		header.Add("Authorization", "Basic  "+base64.StdEncoding.EncodeToString(bytes.NewBufferString(one.Username + ":" + one.Password).Bytes()))
+		header.Add("Authorization", "Basic  "+base64.StdEncoding.EncodeToString(bytes.NewBufferString(one.Username+":"+one.Password).Bytes()))
 	} else {
 		header.Add("Authorization", "Bearer "+one.AccessToken)
 	}
@@ -82,7 +82,7 @@ func (one *OneRest) trend(query map[string]string) (Trend, error) {
 }
 
 // Find all assets base on given asset type, select and condition map
-func (one *OneRest) find(query *Query) ([] Asset, error) {
+func (one *OneRest) find(query *Query) ([]Asset, error) {
 	req := one.getRestRequest(DATA_END_POINT + query.Build())
 	client := &http.Client{}
 	resp, err := client.Do(req)
